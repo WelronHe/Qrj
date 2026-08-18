@@ -86,3 +86,36 @@ test('content includes the agreed home and gift copy', () => {
     /何花花的第一个七夕/,
   );
 });
+
+test('the concert question uses the concise approved wording', () => {
+  assert.equal(
+    QUESTIONS[1].title,
+    '《乐队的夏天》中，哪个组合你最想去一次？',
+  );
+});
+
+test('ritual pacing uses deliberate answer and reveal timings', () => {
+  assert.equal(appModule.ANSWER_ADVANCE_MS, 420);
+  assert.equal(appModule.GIFT_REVEAL_MS, 1450);
+});
+
+test('home renders the black rose invitation', () => {
+  const html = appModule.renderScreen(createInitialState());
+
+  assert.match(html, /black-rose/);
+  assert.match(html, /刻有你名字/);
+});
+
+test('gift opening contains petals and the revealed screen contains the local tickets', () => {
+  let gift = startQuiz(createInitialState());
+  gift = selectAnswer(gift, 0);
+  gift = selectAnswer(gift, 0);
+  gift = selectAnswer(gift, 0);
+
+  const giftHtml = appModule.renderScreen(gift);
+  assert.equal((giftHtml.match(/opening-petal/g) || []).length, 8);
+
+  const revealedHtml = appModule.renderScreen(revealGift(gift));
+  assert.match(revealedHtml, /ticket-stack/);
+  assert.match(revealedHtml, /\/public\/tickets\.svg/);
+});
