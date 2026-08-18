@@ -1,0 +1,343 @@
+<style>
+  .v3-wrap {
+    display: grid;
+    grid-template-columns: minmax(330px, 440px) minmax(280px, 1fr);
+    gap: 42px;
+    align-items: center;
+    margin-top: 24px;
+  }
+
+  .v3-phone {
+    position: relative;
+    min-height: 760px;
+    overflow: hidden;
+    border-radius: 34px;
+    background: #09090b;
+    color: #fff;
+    box-shadow: 0 34px 95px rgba(0,0,0,.32);
+  }
+
+  .v3-photo {
+    position: relative;
+    height: 472px;
+    background: url('/files/concert-live.png') center 46% / cover no-repeat;
+  }
+
+  .v3-photo::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(180deg, rgba(0,0,0,.04), rgba(0,0,0,.05) 52%, #09090b 100%);
+  }
+
+  .v3-brand {
+    position: absolute;
+    z-index: 2;
+    top: 24px;
+    left: 22px;
+    color: #fff;
+    font: 950 44px/.86 ui-monospace, SFMono-Regular, Menlo, monospace;
+    letter-spacing: -.08em;
+    text-shadow: 3px 3px 0 #f02a33, -2px -2px 0 #3269ff;
+  }
+
+  .v3-live {
+    position: absolute;
+    z-index: 2;
+    top: 25px;
+    right: 21px;
+    padding: 6px 9px;
+    background: #baff19;
+    color: #080808;
+    font: 900 10px ui-monospace, SFMono-Regular, Menlo, monospace;
+    letter-spacing: .12em;
+    transform: rotate(2deg);
+  }
+
+  .v3-stars {
+    position: absolute;
+    z-index: 2;
+    top: 108px;
+    right: 30px;
+    color: #baff19;
+    font-size: 32px;
+    letter-spacing: -7px;
+  }
+
+  .v3-ticket {
+    position: absolute;
+    z-index: 3;
+    left: 22px;
+    right: 22px;
+    bottom: -61px;
+    display: grid;
+    grid-template-columns: 1fr 110px;
+    min-height: 158px;
+    overflow: hidden;
+    border-radius: 18px;
+    background: #f8f0dc;
+    color: #15120e;
+    box-shadow: 0 24px 52px rgba(0,0,0,.48);
+    transform: rotate(-1.6deg);
+  }
+
+  .v3-ticket-main {
+    padding: 21px 18px;
+    border-right: 1px dashed rgba(20,16,13,.34);
+  }
+
+  .v3-ticket-main small {
+    color: #e01f31;
+    font-size: 9px;
+    font-weight: 900;
+    letter-spacing: .18em;
+  }
+
+  .v3-ticket-main strong {
+    display: block;
+    margin: 11px 0 8px;
+    font-size: 22px;
+    line-height: 1.08;
+  }
+
+  .v3-ticket-main p {
+    margin: 0;
+    color: #71695e;
+    font-size: 10px;
+    line-height: 1.55;
+  }
+
+  .v3-stub {
+    display: grid;
+    place-items: center;
+    background: #baff19;
+    text-align: center;
+  }
+
+  .v3-stub strong {
+    display: block;
+    font: 950 27px/1 ui-monospace, SFMono-Regular, Menlo, monospace;
+    letter-spacing: -.1em;
+  }
+
+  .v3-stub span {
+    display: block;
+    margin-top: 8px;
+    font-size: 9px;
+    font-weight: 900;
+    letter-spacing: .12em;
+  }
+
+  .v3-poster {
+    position: absolute;
+    z-index: 4;
+    right: 20px;
+    bottom: 10px;
+    width: 57px;
+    height: 80px;
+    border: 3px solid #fff;
+    background: url('/files/concert-poster.png') center / cover no-repeat;
+    box-shadow: 0 9px 26px rgba(0,0,0,.44);
+    transform: rotate(5deg);
+  }
+
+  .v3-copy {
+    position: relative;
+    z-index: 4;
+    padding: 88px 26px 30px;
+    background: radial-gradient(circle at 80% 0%, rgba(186,255,25,.1), transparent 36%), #09090b;
+  }
+
+  .v3-meta {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    color: #baff19;
+    font: 900 10px ui-monospace, SFMono-Regular, Menlo, monospace;
+    letter-spacing: .13em;
+  }
+
+  .v3-meta::before { content: ''; width: 34px; height: 2px; background: #baff19; }
+
+  .v3-copy h2 {
+    margin: 17px 0 11px;
+    color: #fff;
+    font-family: 'Songti SC', 'STSong', serif;
+    font-size: 30px;
+    line-height: 1.36;
+  }
+
+  .v3-copy > p {
+    margin: 0 0 24px;
+    color: rgba(255,255,255,.5);
+    font-size: 12px;
+  }
+
+  .answer-wrap {
+    position: relative;
+    isolation: isolate;
+  }
+
+  .answer-button {
+    position: relative;
+    z-index: 3;
+    width: 100%;
+    padding: 16px 20px;
+    border: 1px solid rgba(255,255,255,.92);
+    border-radius: 999px;
+    background: #fff;
+    color: #13110f;
+    font-size: 14px;
+    font-weight: 900;
+    cursor: pointer;
+    box-shadow:
+      0 12px 28px rgba(0,0,0,.4),
+      0 5px 0 rgba(186,255,25,.72),
+      inset 0 -2px 0 rgba(0,0,0,.08);
+    transition: transform .16s ease, background .25s ease, color .25s ease, box-shadow .25s ease;
+  }
+
+  .answer-button:hover {
+    transform: translateY(-2px);
+    box-shadow:
+      0 18px 34px rgba(0,0,0,.48),
+      0 7px 0 rgba(186,255,25,.86),
+      inset 0 -2px 0 rgba(0,0,0,.08);
+  }
+
+  .answer-button:active { transform: translateY(4px) scale(.985); }
+
+  .answer-wrap.is-loved .answer-button {
+    background: #baff19;
+    border-color: #baff19;
+    color: #080808;
+    transform: translateY(4px) scale(.985);
+    box-shadow: 0 8px 28px rgba(186,255,25,.25), 0 2px 0 #6f9800;
+  }
+
+  .heart-burst span {
+    position: absolute;
+    z-index: 2;
+    left: 50%;
+    top: 50%;
+    opacity: 0;
+    font-size: 18px;
+    pointer-events: none;
+  }
+
+  .answer-wrap.is-loved .heart-burst span {
+    animation: v3-burst .8s cubic-bezier(.16,.8,.25,1) both;
+  }
+
+  .heart-burst span:nth-child(1) { --x: -120px; --y: -66px; color: #ff3446; }
+  .heart-burst span:nth-child(2) { --x: -70px; --y: -92px; color: #baff19; animation-delay: .04s !important; }
+  .heart-burst span:nth-child(3) { --x: -18px; --y: -82px; color: #fff; animation-delay: .08s !important; }
+  .heart-burst span:nth-child(4) { --x: 48px; --y: -90px; color: #ff3446; animation-delay: .02s !important; }
+  .heart-burst span:nth-child(5) { --x: 112px; --y: -58px; color: #baff19; animation-delay: .1s !important; }
+  .heart-burst span:nth-child(6) { --x: 92px; --y: 30px; color: #fff; animation-delay: .06s !important; }
+  .heart-burst span:nth-child(7) { --x: -102px; --y: 25px; color: #ff3446; animation-delay: .12s !important; }
+
+  @keyframes v3-burst {
+    0% { opacity: 0; transform: translate(-50%, -50%) scale(.4) rotate(0); }
+    22% { opacity: 1; }
+    100% { opacity: 0; transform: translate(calc(-50% + var(--x)), calc(-50% + var(--y))) scale(1.15) rotate(18deg); }
+  }
+
+  .v3-explain { padding-top: 10px; }
+
+  .v3-explain h3 { margin-bottom: 12px; font-size: 23px; }
+
+  .v3-explain p {
+    color: #776e6d;
+    font-size: 14px;
+    line-height: 1.75;
+  }
+
+  .state-card {
+    margin-top: 22px;
+    padding: 20px;
+    border: 1px solid #e3d9cf;
+    border-radius: 18px;
+    background: #fffdf9;
+  }
+
+  .state-card strong { display: block; margin-bottom: 7px; }
+  .state-card p { margin: 0; font-size: 13px; }
+
+  .approve-v3 {
+    cursor: pointer;
+    margin-top: 24px;
+    padding: 17px;
+    border-radius: 999px;
+    background: #6f1533;
+    color: #fff;
+    font-weight: 900;
+    text-align: center;
+    box-shadow: 0 12px 28px rgba(111,21,51,.2);
+  }
+
+  .approve-v3.selected { background: #baff19; color: #111; }
+
+  @media (max-width: 860px) {
+    .v3-wrap { grid-template-columns: 1fr; }
+    .v3-phone { width: 100%; max-width: 440px; margin: 0 auto; }
+    .v3-explain { width: 100%; max-width: 520px; margin: 0 auto; }
+  }
+</style>
+
+<h2>方案 2 · 邀请回应版</h2>
+<p class="subtitle">点击手机底部按钮，可以预览最终的点赞式惊喜反馈。</p>
+
+<div class="v3-wrap">
+  <div class="v3-phone">
+    <section class="v3-photo">
+      <div class="v3-brand">NEW<br>PANTS</div>
+      <div class="v3-live">LIVE!</div>
+      <div class="v3-stars">✦ ✦ ✦</div>
+      <div class="v3-ticket">
+        <div class="v3-ticket-main">
+          <small>TWO TICKETS · ONE NIGHT</small>
+          <strong>新裤子巡回演唱会<br>广州站</strong>
+          <p>宝能广州国际体育演艺中心<br>2026.08.22 · SAT · 19:30</p>
+        </div>
+        <div class="v3-stub"><div><strong>08.22</strong><span>ADMIT TWO</span></div></div>
+      </div>
+      <div class="v3-poster"></div>
+    </section>
+
+    <section class="v3-copy">
+      <div class="v3-meta">2026 · GUANGZHOU</div>
+      <h2>花花，8月22日周六，<br>和我一起去看新裤子吧。</h2>
+      <p>为我们准备了两张相邻的票。</p>
+      <div class="answer-wrap" id="answer-wrap-v3">
+        <div class="heart-burst"><span>♥</span><span>✦</span><span>♥</span><span>✦</span><span>♥</span><span>✦</span><span>♥</span></div>
+        <button class="answer-button" id="answer-button-v3" onclick="loveAnswerV3()">当然要一起 ♥</button>
+      </div>
+    </section>
+  </div>
+
+  <div class="v3-explain">
+    <h3>按钮不跳转，只完成一次回应</h3>
+    <p>默认态使用白色高光与荧光绿底部投影，像一颗悬浮的实体按钮。点击时先下压，再变成演唱会海报里的荧光绿，并弹出爱心、星光和彩带。</p>
+    <div class="state-card">
+      <strong>点击后的文案</strong>
+      <p>“说好了，现场见 ♥”——既确认邀请，也自然结束整个拆礼物流程。</p>
+    </div>
+    <div class="state-card">
+      <strong>动效节奏</strong>
+      <p>按下 160ms → 按钮变色 250ms → 爱心与星光扩散 800ms。不会循环，不会继续跳转。</p>
+    </div>
+    <div class="approve-v3" data-choice="approve-invitation-response-v3" onclick="toggleSelect(this)">这个版本可以进入正式页面</div>
+  </div>
+</div>
+
+<script>
+  function loveAnswerV3() {
+    const wrap = document.getElementById('answer-wrap-v3');
+    const button = document.getElementById('answer-button-v3');
+    wrap.classList.remove('is-loved');
+    void wrap.offsetWidth;
+    wrap.classList.add('is-loved');
+    button.textContent = '说好了，现场见 ♥';
+  }
+</script>

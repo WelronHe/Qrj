@@ -1,0 +1,333 @@
+<style>
+  .review-layout {
+    display: grid;
+    grid-template-columns: minmax(320px, 430px) minmax(280px, 1fr);
+    gap: 38px;
+    align-items: start;
+    margin-top: 26px;
+  }
+
+  .result-phone {
+    position: relative;
+    min-height: 760px;
+    overflow: hidden;
+    border-radius: 32px;
+    background: #09090b;
+    color: #fff;
+    box-shadow: 0 30px 90px rgba(0, 0, 0, .28);
+  }
+
+  .live-hero {
+    position: relative;
+    height: 470px;
+    overflow: hidden;
+    background: #1a0c08;
+  }
+
+  .live-hero::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: url('/files/concert-live.png') center 46% / cover no-repeat;
+    filter: saturate(1.08) contrast(1.04);
+    transform: scale(1.02);
+  }
+
+  .live-hero::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background:
+      linear-gradient(180deg, rgba(0,0,0,.06) 0%, rgba(0,0,0,.02) 46%, #09090b 100%),
+      linear-gradient(90deg, rgba(0,0,0,.18), transparent 38%, transparent 72%, rgba(0,0,0,.12));
+  }
+
+  .topline {
+    position: absolute;
+    z-index: 2;
+    top: 22px;
+    left: 22px;
+    right: 22px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    color: rgba(255,255,255,.84);
+    font-size: 10px;
+    font-weight: 800;
+    letter-spacing: .2em;
+  }
+
+  .topline strong {
+    padding: 5px 7px;
+    background: #b9ff21;
+    color: #080808;
+    font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+    letter-spacing: .06em;
+    transform: rotate(-2deg);
+  }
+
+  .pixel-title {
+    position: absolute;
+    z-index: 2;
+    top: 72px;
+    left: 22px;
+    color: #fff;
+    font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+    font-size: 46px;
+    font-weight: 950;
+    letter-spacing: -.08em;
+    line-height: .86;
+    text-shadow: 3px 3px 0 #ff2b2b, -2px -2px 0 #2a68ff;
+  }
+
+  .spark {
+    position: absolute;
+    z-index: 2;
+    top: 150px;
+    right: 30px;
+    color: #b9ff21;
+    font-size: 34px;
+    letter-spacing: -8px;
+  }
+
+  .ticket {
+    position: absolute;
+    z-index: 3;
+    left: 24px;
+    right: 24px;
+    bottom: -58px;
+    display: grid;
+    grid-template-columns: 1fr 112px;
+    min-height: 154px;
+    overflow: hidden;
+    border-radius: 18px;
+    background: #f6f0df;
+    color: #15120f;
+    box-shadow: 0 22px 48px rgba(0,0,0,.42);
+    transform: rotate(-1.5deg);
+  }
+
+  .ticket-main {
+    padding: 21px 18px;
+    border-right: 1px dashed rgba(20,16,13,.35);
+  }
+
+  .ticket-label {
+    color: #df1f2f;
+    font-size: 9px;
+    font-weight: 900;
+    letter-spacing: .18em;
+  }
+
+  .ticket h3 {
+    margin: 11px 0 6px;
+    font-size: 23px;
+    line-height: 1.08;
+  }
+
+  .ticket p {
+    margin: 0;
+    color: #6f685e;
+    font-size: 10px;
+    line-height: 1.6;
+  }
+
+  .ticket-stub {
+    display: grid;
+    place-items: center;
+    padding: 14px;
+    background: #b9ff21;
+    text-align: center;
+  }
+
+  .ticket-stub strong {
+    display: block;
+    font: 950 28px/1 ui-monospace, SFMono-Regular, Menlo, monospace;
+    letter-spacing: -.1em;
+  }
+
+  .ticket-stub span {
+    display: block;
+    margin-top: 8px;
+    font-size: 9px;
+    font-weight: 900;
+    letter-spacing: .12em;
+  }
+
+  .result-copy {
+    position: relative;
+    z-index: 4;
+    padding: 86px 26px 28px;
+    background:
+      radial-gradient(circle at 80% 0%, rgba(185,255,33,.08), transparent 38%),
+      #09090b;
+  }
+
+  .result-copy .date {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    color: #b9ff21;
+    font: 800 11px ui-monospace, SFMono-Regular, Menlo, monospace;
+    letter-spacing: .12em;
+  }
+
+  .result-copy .date::before {
+    content: '';
+    width: 34px;
+    height: 2px;
+    background: #b9ff21;
+  }
+
+  .result-copy h2 {
+    margin: 17px 0 11px;
+    color: #fff;
+    font-family: 'Songti SC', 'STSong', serif;
+    font-size: 31px;
+    line-height: 1.34;
+  }
+
+  .result-copy p {
+    margin: 0 0 22px;
+    color: rgba(255,255,255,.52);
+    font-size: 12px;
+  }
+
+  .yes-button {
+    width: 100%;
+    padding: 15px 18px;
+    border: 0;
+    border-radius: 999px;
+    background: #fff;
+    color: #15110f;
+    font-weight: 900;
+    font-size: 14px;
+  }
+
+  .poster-chip {
+    position: absolute;
+    z-index: 4;
+    right: 20px;
+    bottom: 13px;
+    width: 58px;
+    height: 78px;
+    border: 3px solid #fff;
+    background: url('/files/concert-poster.png') center / cover no-repeat;
+    box-shadow: 0 8px 22px rgba(0,0,0,.38);
+    transform: rotate(5deg);
+  }
+
+  .notes {
+    padding-top: 18px;
+  }
+
+  .note {
+    position: relative;
+    margin-bottom: 20px;
+    padding: 19px 20px 19px 58px;
+    border: 1px solid #e5ddd4;
+    border-radius: 18px;
+    background: #fffdf9;
+  }
+
+  .note b {
+    position: absolute;
+    top: 18px;
+    left: 18px;
+    display: grid;
+    width: 26px;
+    height: 26px;
+    place-items: center;
+    border-radius: 50%;
+    background: #6f1533;
+    color: #fff;
+    font-size: 12px;
+  }
+
+  .note h3 { margin: 0 0 5px; font-size: 16px; }
+  .note p { margin: 0; color: #827777; font-size: 13px; line-height: 1.65; }
+
+  .approval {
+    cursor: pointer;
+    margin-top: 26px;
+    padding: 18px 20px;
+    border: 1px solid #d9cdbf;
+    border-radius: 18px;
+    background: #f4ead7;
+    color: #5c2638;
+    font-weight: 800;
+    text-align: center;
+    transition: .2s ease;
+  }
+
+  .approval:hover,
+  .approval.selected {
+    border-color: #6f1533;
+    background: #6f1533;
+    color: #fff;
+  }
+
+  @media (max-width: 860px) {
+    .review-layout { grid-template-columns: 1fr; }
+    .result-phone { max-width: 430px; margin: 0 auto; width: 100%; }
+    .notes { max-width: 520px; margin: 0 auto; }
+  }
+</style>
+
+<h2>方案 2 · 现场感版本</h2>
+<p class="subtitle">用现场照片建立第一眼冲击，票根承载事实，邀请语负责最后的情绪落点。</p>
+
+<div class="review-layout">
+  <div class="result-phone">
+    <section class="live-hero">
+      <div class="topline"><span>OUR FIRST QIXI</span><strong>LIVE!</strong></div>
+      <div class="pixel-title">NEW<br>PANTS</div>
+      <div class="spark">✦ ✦ ✦</div>
+      <div class="ticket">
+        <div class="ticket-main">
+          <span class="ticket-label">TWO TICKETS · ONE NIGHT</span>
+          <h3>新裤子巡回演唱会<br>广州站</h3>
+          <p>宝能广州国际体育演艺中心<br>2026.08.22 · SAT · 19:30</p>
+        </div>
+        <div class="ticket-stub">
+          <div><strong>08.22</strong><span>ADMIT TWO</span></div>
+        </div>
+      </div>
+      <div class="poster-chip" aria-label="演唱会海报缩略图"></div>
+    </section>
+
+    <section class="result-copy">
+      <div class="date">2026 · GUANGZHOU</div>
+      <h2>花花，8月22日，<br>和我一起去看新裤子吧。</h2>
+      <p>为我们准备了两张相邻的票。</p>
+      <button class="yes-button">当然要一起 ↗</button>
+    </section>
+  </div>
+
+  <div class="notes">
+    <div class="note">
+      <b>1</b>
+      <h3>现场图做全幅主画面</h3>
+      <p>保留舞台、灯束和彩带，把人直接拉进演唱会现场；底部加黑色渐变，保证票根和邀请语清楚。</p>
+    </div>
+    <div class="note">
+      <b>2</b>
+      <h3>海报语言只提炼，不照搬</h3>
+      <p>使用像素英文字、荧光绿、红蓝错位阴影和倾斜小海报，延续官方海报的怪诞摇滚气质，同时避免页面变乱。</p>
+    </div>
+    <div class="note">
+      <b>3</b>
+      <h3>票根与邀请形成两层结果</h3>
+      <p>票根回答“去哪里、什么时候、两张票”，下面一句话回答“想和谁一起”。先看到事实，再收到邀请。</p>
+    </div>
+    <div class="note">
+      <b>4</b>
+      <h3>点击后给一句轻反馈</h3>
+      <p>按钮点击后变成“那我们现场见 ✦”，同时撒下少量荧光绿与红色纸屑，不跳转、不填写信息。</p>
+    </div>
+
+    <div class="approval" data-choice="approve-live-ticket-v2" onclick="toggleSelect(this)">
+      这个方向可以，进入正式页面
+    </div>
+  </div>
+</div>

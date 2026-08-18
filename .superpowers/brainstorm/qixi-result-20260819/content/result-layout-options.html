@@ -1,0 +1,303 @@
+<style>
+  .concept-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(240px, 1fr));
+    gap: 20px;
+    margin-top: 26px;
+  }
+
+  .concept-card {
+    cursor: pointer;
+    border: 1px solid #e6ddd7;
+    border-radius: 24px;
+    padding: 14px;
+    background: #fffdfa;
+    transition: transform .2s ease, border-color .2s ease, box-shadow .2s ease;
+  }
+
+  .concept-card:hover {
+    transform: translateY(-3px);
+    border-color: #7a1836;
+    box-shadow: 0 18px 50px rgba(68, 23, 36, .12);
+  }
+
+  .concept-card.selected {
+    border-color: #7a1836;
+    box-shadow: 0 0 0 3px rgba(122, 24, 54, .12);
+  }
+
+  .phone {
+    position: relative;
+    min-height: 520px;
+    overflow: hidden;
+    border-radius: 20px;
+    background: #f7f1e9;
+    color: #26151b;
+    box-shadow: inset 0 0 0 1px rgba(91, 50, 59, .08);
+  }
+
+  .phone::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image: linear-gradient(rgba(112, 79, 70, .045) 1px, transparent 1px), linear-gradient(90deg, rgba(112, 79, 70, .045) 1px, transparent 1px);
+    background-size: 34px 34px;
+    pointer-events: none;
+  }
+
+  .scene {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    flex-direction: column;
+    min-height: 520px;
+    padding: 28px 22px 22px;
+  }
+
+  .eyebrow {
+    color: #7a1836;
+    font-size: 10px;
+    font-weight: 800;
+    letter-spacing: .2em;
+  }
+
+  .date {
+    margin-top: 30px;
+    color: #c79b45;
+    font-family: Georgia, serif;
+    font-size: 54px;
+    line-height: .9;
+  }
+
+  .date small {
+    display: block;
+    margin-top: 10px;
+    color: #7a1836;
+    font-family: inherit;
+    font-size: 13px;
+    letter-spacing: .12em;
+  }
+
+  .invite {
+    margin: 30px 0 8px;
+    font-family: 'Songti SC', 'STSong', serif;
+    font-size: 27px;
+    font-weight: 700;
+    line-height: 1.34;
+  }
+
+  .subcopy {
+    color: #8c7e7d;
+    font-size: 12px;
+    line-height: 1.7;
+  }
+
+  .proof {
+    margin-top: auto;
+    overflow: hidden;
+    border-radius: 16px;
+    background: #fff;
+    box-shadow: 0 12px 30px rgba(58, 24, 35, .12);
+  }
+
+  .proof-head {
+    padding: 13px 14px 10px;
+    background: linear-gradient(135deg, #fff2f5, #fff);
+    color: #d72c5d;
+    font-size: 10px;
+    font-weight: 800;
+  }
+
+  .proof-body {
+    padding: 14px;
+  }
+
+  .proof-title {
+    font-size: 17px;
+    font-weight: 800;
+  }
+
+  .proof-row {
+    margin-top: 7px;
+    color: #8c8585;
+    font-size: 11px;
+  }
+
+  .pill {
+    display: inline-flex;
+    margin-top: 12px;
+    padding: 5px 8px;
+    border-radius: 999px;
+    background: #f3e4bd;
+    color: #7a1836;
+    font-size: 10px;
+    font-weight: 800;
+  }
+
+  .ticket-hero {
+    margin: 38px 0 26px;
+    padding: 24px 19px;
+    border-radius: 18px;
+    background: linear-gradient(135deg, #5e102b, #8d2346);
+    color: #fff9ee;
+    transform: rotate(-2deg);
+    box-shadow: 0 22px 45px rgba(71, 13, 35, .23);
+  }
+
+  .ticket-hero strong {
+    display: block;
+    margin-top: 12px;
+    font-family: 'Songti SC', serif;
+    font-size: 24px;
+    line-height: 1.25;
+  }
+
+  .ticket-meta {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin-top: 20px;
+    padding-top: 15px;
+    border-top: 1px dashed rgba(255,255,255,.4);
+    font-size: 11px;
+  }
+
+  .question {
+    margin: auto 0 22px;
+    font-family: 'Songti SC', serif;
+    font-size: 29px;
+    line-height: 1.35;
+  }
+
+  .cta {
+    width: 100%;
+    border: 0;
+    border-radius: 999px;
+    padding: 14px;
+    background: #6f1533;
+    color: #fff;
+    font-weight: 800;
+  }
+
+  .dark {
+    background: radial-gradient(circle at 50% 32%, #451725 0, #210b13 44%, #12070b 100%);
+    color: #fff8ed;
+  }
+
+  .dark::before { opacity: .1; }
+
+  .dark .scene { align-items: center; text-align: center; }
+
+  .vinyl {
+    position: relative;
+    width: 166px;
+    height: 166px;
+    margin-top: 48px;
+    border-radius: 50%;
+    background: repeating-radial-gradient(circle, #21181a 0 5px, #070708 6px 8px);
+    box-shadow: 0 18px 60px rgba(0,0,0,.5);
+  }
+
+  .vinyl::after {
+    content: '08.22';
+    position: absolute;
+    inset: 54px;
+    display: grid;
+    place-items: center;
+    border-radius: 50%;
+    background: #b99341;
+    color: #2a1019;
+    font: 800 12px Georgia, serif;
+  }
+
+  .dark .invite { margin-top: 34px; }
+  .dark .subcopy { color: rgba(255,248,237,.55); }
+
+  .card-caption { padding: 18px 8px 6px; }
+  .card-caption h3 { margin: 0 0 6px; }
+  .card-caption p { margin: 0; color: #7f7473; font-size: 13px; line-height: 1.6; }
+
+  .recommended {
+    display: inline-flex;
+    margin-left: 8px;
+    padding: 4px 8px;
+    border-radius: 999px;
+    background: #f1e2b8;
+    color: #6f1533;
+    font-size: 10px;
+    font-weight: 800;
+    vertical-align: 2px;
+  }
+
+  @media (max-width: 960px) {
+    .concept-grid { grid-template-columns: 1fr; }
+    .concept-card { max-width: 420px; margin: 0 auto; width: 100%; }
+  }
+</style>
+
+<h2>结果页怎么揭晓更动人？</h2>
+<p class="subtitle">三种方案都只保留日期、乐队和邀请，不出现身份证、价格与订单操作。</p>
+
+<div class="concept-grid">
+  <article class="concept-card" data-choice="a" onclick="toggleSelect(this)">
+    <div class="phone">
+      <div class="scene">
+        <span class="eyebrow">OUR FIRST QIXI · THE ANSWER</span>
+        <div class="date">08.22<small>2026 · GUANGZHOU</small></div>
+        <h3 class="invite">花花，<br>和我一起去看<br>新裤子吧。</h3>
+        <p class="subcopy">这一次不是愿望，是已经准备好的那一晚。</p>
+        <div class="proof">
+          <div class="proof-head">真实凭证 · 已准备 2 张</div>
+          <div class="proof-body">
+            <div class="proof-title">新裤子巡回演唱会广州站</div>
+            <div class="proof-row">2026.08.22 · 周六 19:30</div>
+            <div class="proof-row">宝能广州国际体育演艺中心</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="card-caption">
+      <h3>A｜邀请函 + 真实凭证 <span class="recommended">推荐</span></h3>
+      <p>先用大日期和一句邀请制造心动，再用精简订单卡证明“真的买好了”。情绪与真实感最平衡。</p>
+    </div>
+  </article>
+
+  <article class="concept-card" data-choice="b" onclick="toggleSelect(this)">
+    <div class="phone">
+      <div class="scene">
+        <span class="eyebrow">TWO TICKETS · ONE NIGHT</span>
+        <div class="ticket-hero">
+          <span>QIXI 2026</span>
+          <strong>新裤子<br>广州站</strong>
+          <div class="ticket-meta">
+            <div>DATE<br><b>08.22</b></div>
+            <div>ADMIT<br><b>TWO</b></div>
+          </div>
+        </div>
+        <h3 class="question">花花，8月22日，和我一起去看新裤子吧。</h3>
+        <p class="subcopy">为我们准备了两张相邻的票。</p>
+        <button class="cta">当然要一起</button>
+      </div>
+    </div>
+    <div class="card-caption">
+      <h3>B｜双人票根</h3>
+      <p>延续当前门票视觉，邀请最直给，还能增加一个回应按钮；更像互动告白，但真实订单感较弱。</p>
+    </div>
+  </article>
+
+  <article class="concept-card" data-choice="c" onclick="toggleSelect(this)">
+    <div class="phone dark">
+      <div class="scene">
+        <span class="eyebrow" style="color:#d9bd78">THE ANSWER IS A NIGHT WITH YOU</span>
+        <div class="vinyl"></div>
+        <h3 class="invite">花花，8月22日，<br>和我一起去看<br>新裤子吧。</h3>
+        <p class="subcopy">广州 · 两个人 · 一场演唱会</p>
+        <span class="pill">门票已经准备好</span>
+      </div>
+    </div>
+    <div class="card-caption">
+      <h3>C｜唱片揭晓</h3>
+      <p>用黑胶唱片做最终视觉，氛围最强、最像音乐礼物；但不直接展示真实购票凭证。</p>
+    </div>
+  </article>
+</div>
