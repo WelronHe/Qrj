@@ -37,6 +37,7 @@ export function createInitialState() {
     view: 'home',
     currentQuestion: 0,
     answers: Array(QUESTIONS.length).fill(null),
+    responded: false,
   };
 }
 
@@ -111,6 +112,16 @@ export function resetGift(state) {
     ? {
         ...state,
         view: 'gift',
+        responded: false,
+      }
+    : state;
+}
+
+export function respondToInvitation(state) {
+  return state.view === 'revealed'
+    ? {
+        ...state,
+        responded: true,
       }
     : state;
 }
@@ -251,31 +262,59 @@ function renderGift() {
   `;
 }
 
-function renderRevealed() {
+function renderRevealed(state) {
   return `
-    <main class="screen revealed-screen">
-      <div class="reveal-petals" aria-hidden="true">
-        <i></i><i></i><i></i><i></i><i></i><i></i>
-      </div>
-
-      <section class="revealed-content">
-        <p class="eyebrow">${GIFT_COPY.revealedEyebrow}</p>
-        <h2>${GIFT_COPY.revealedTitle}</h2>
-        <p class="revealed-subtitle">${GIFT_COPY.revealedSubtitle}</p>
-
-        <div class="ticket-stack">
-          <span class="ticket-halo" aria-hidden="true"></span>
+    <main class="screen concert-result-screen">
+      <section class="concert-result">
+        <div class="concert-hero">
           <img
-            class="tickets"
-            src="/public/tickets.svg"
-            alt="何花花与何威龙的七夕门票"
+            class="concert-live-photo"
+            src="/public/concert-live.png"
+            alt="新裤子演唱会现场"
           />
+          <div class="concert-photo-shade" aria-hidden="true"></div>
+          <p class="concert-pixel-title" aria-hidden="true">NEW<br />PANTS</p>
+          <span class="concert-live-badge">LIVE!</span>
+          <span class="concert-stars" aria-hidden="true">✦ ✦ ✦</span>
+
+          <div class="concert-ticket">
+            <div class="concert-ticket-main">
+              <small>TWO TICKETS · ONE NIGHT</small>
+              <h2>新裤子巡回演唱会<br />广州站</h2>
+              <p>宝能广州国际体育演艺中心<br />2026.08.22 · SAT · 19:30</p>
+            </div>
+            <div class="concert-ticket-stub">
+              <div>
+                <strong>08.22</strong>
+                <span>ADMIT TWO</span>
+              </div>
+            </div>
+            <img
+              class="concert-poster"
+              src="/public/concert-poster.png"
+              alt="新裤子巡回演唱会广州站海报"
+            />
+          </div>
         </div>
 
-        <p class="ticket-caption">FOR HUAHUA · WITH LOVE</p>
-        <button class="secondary-button" data-action="replay" type="button">
-          ${GIFT_COPY.replay}
-        </button>
+        <div class="concert-invitation">
+          <p class="concert-meta">2026 · GUANGZHOU</p>
+          <h1>花花，8月22日周六，<br />和我一起去看新裤子吧。</h1>
+          <p class="concert-note">为我们准备了两张相邻的票。</p>
+
+          <div class="concert-answer ${state.responded ? 'is-loved' : ''}" aria-live="polite">
+            <div class="concert-heart-burst" aria-hidden="true">
+              <i>♥</i><i>✦</i><i>♥</i><i>✦</i><i>♥</i><i>✦</i><i>♥</i>
+            </div>
+            <button data-action="respond" type="button">
+              ${state.responded ? '说好了，现场见 ♥' : '当然要一起 ♥'}
+            </button>
+          </div>
+
+          <button class="concert-replay" data-action="replay" type="button">
+            ${GIFT_COPY.replay}
+          </button>
+        </div>
       </section>
     </main>
   `;
@@ -289,7 +328,7 @@ export function renderScreen(state) {
     return renderGift();
   }
   if (state.view === 'revealed') {
-    return renderRevealed();
+    return renderRevealed(state);
   }
   return renderHome();
 }
@@ -356,6 +395,17 @@ export function mountApp(root) {
           locked = false;
           render();
         }, GIFT_REVEAL_MS);
+      });
+
+    root
+      .querySelector('[data-action="respond"]')
+      ?.addEventListener('click', (event) => {
+        state = respondToInvitation(state);
+        const answer = event.currentTarget.closest('.concert-answer');
+        answer?.classList.remove('is-loved');
+        void answer?.offsetWidth;
+        answer?.classList.add('is-loved');
+        event.currentTarget.textContent = '说好了，现场见 ♥';
       });
 
     root

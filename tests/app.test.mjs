@@ -18,6 +18,7 @@ test('starts at home with no answers', () => {
     view: 'home',
     currentQuestion: 0,
     answers: [null, null, null],
+    responded: false,
   });
 });
 
@@ -106,7 +107,7 @@ test('home renders the black rose invitation', () => {
   assert.match(html, /刻有你名字/);
 });
 
-test('gift opening contains petals and the revealed screen contains the local tickets', () => {
+test('gift opening contains petals', () => {
   let gift = startQuiz(createInitialState());
   gift = selectAnswer(gift, 0);
   gift = selectAnswer(gift, 0);
@@ -114,8 +115,31 @@ test('gift opening contains petals and the revealed screen contains the local ti
 
   const giftHtml = appModule.renderScreen(gift);
   assert.equal((giftHtml.match(/opening-petal/g) || []).length, 8);
+});
 
-  const revealedHtml = appModule.renderScreen(revealGift(gift));
-  assert.match(revealedHtml, /ticket-stack/);
-  assert.match(revealedHtml, /\/public\/tickets\.svg/);
+test('concert invitation can be accepted without leaving the result', () => {
+  let state = startQuiz(createInitialState());
+  state = selectAnswer(state, 0);
+  state = selectAnswer(state, 0);
+  state = selectAnswer(state, 0);
+  state = revealGift(state);
+
+  const responded = appModule.respondToInvitation(state);
+
+  assert.equal(responded.view, 'revealed');
+  assert.equal(responded.responded, true);
+  assert.match(appModule.renderScreen(responded), /说好了，现场见 ♥/);
+});
+
+test('revealed result uses the approved concert assets and copy', () => {
+  const revealedHtml = appModule.renderScreen({
+    ...createInitialState(),
+    view: 'revealed',
+  });
+
+  assert.match(revealedHtml, /新裤子巡回演唱会/);
+  assert.match(revealedHtml, /花花，8月22日周六/);
+  assert.match(revealedHtml, /\/public\/concert-live\.png/);
+  assert.match(revealedHtml, /\/public\/concert-poster\.png/);
+  assert.doesNotMatch(revealedHtml, /\/public\/tickets\.svg/);
 });
