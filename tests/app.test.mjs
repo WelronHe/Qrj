@@ -161,3 +161,47 @@ test('revealed result uses the approved concert assets and copy', () => {
   assert.match(revealedHtml, /\/public\/concert-poster\.png/);
   assert.doesNotMatch(revealedHtml, /\/public\/tickets\.svg/);
 });
+
+test('mount starts view music and retries it on first interaction', async () => {
+  const syncedViews = [];
+  let retries = 0;
+  let firstInteraction;
+  let removedInteraction;
+  const root = {
+    innerHTML: '',
+    querySelector() {
+      return null;
+    },
+    querySelectorAll() {
+      return [];
+    },
+  };
+  const musicController = {
+    sync(view) {
+      syncedViews.push(view);
+      return Promise.resolve(false);
+    },
+    retryActive() {
+      retries += 1;
+    },
+  };
+  const interactionTarget = {
+    addEventListener(type, listener, options) {
+      assert.equal(type, 'pointerdown');
+      assert.deepEqual(options, { once: true });
+      firstInteraction = listener;
+    },
+    removeEventListener(type, listener) {
+      assert.equal(type, 'pointerdown');
+      removedInteraction = listener;
+    },
+  };
+
+  appModule.mountApp(root, { musicController, interactionTarget });
+  await Promise.resolve();
+
+  assert.deepEqual(syncedViews, ['home']);
+  assert.equal(removedInteraction, undefined);
+  firstInteraction();
+  assert.equal(retries, 1);
+});

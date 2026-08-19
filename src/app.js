@@ -1,3 +1,5 @@
+import { createMusicController } from './music.js';
+
 export const QUESTIONS = [
   {
     title: '你是谁？',
@@ -332,7 +334,13 @@ export function renderScreen(state) {
   return renderHome();
 }
 
-export function mountApp(root) {
+export function mountApp(
+  root,
+  {
+    musicController = createMusicController(),
+    interactionTarget = document,
+  } = {},
+) {
   if (!root) {
     throw new Error('App root is required');
   }
@@ -340,8 +348,18 @@ export function mountApp(root) {
   let state = createInitialState();
   let locked = false;
 
+  const retryMusic = () => musicController.retryActive();
+  interactionTarget.addEventListener('pointerdown', retryMusic, { once: true });
+
   const render = () => {
     root.innerHTML = renderScreen(state);
+    const renderedView = state.view;
+    const playback = musicController.sync(renderedView);
+    Promise.resolve(playback).then((started) => {
+      if (started || renderedView === 'revealed') {
+        interactionTarget.removeEventListener('pointerdown', retryMusic);
+      }
+    });
 
     root
       .querySelector('[data-action="start"]')
