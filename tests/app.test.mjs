@@ -144,10 +144,10 @@ test('local preview entrypoints bust stale editorial assets', () => {
 
   assert.match(
     indexHtml,
-    /\/src\/styles\.css\?v=qixi-editorial-20260819-2/,
+    /\/src\/styles\.css\?v=qixi-editorial-20260819-3/,
   );
-  assert.match(indexHtml, /\/src\/main\.js\?v=qixi-editorial-20260819-2/);
-  assert.match(mainScript, /\.\/app\.js\?v=qixi-editorial-20260819-2/);
+  assert.match(indexHtml, /\/src\/main\.js\?v=qixi-editorial-20260819-3/);
+  assert.match(mainScript, /\.\/app\.js\?v=qixi-editorial-20260819-3/);
 });
 
 test('ritual pacing uses deliberate answer and reveal timings', () => {
@@ -170,6 +170,22 @@ test('gift opening contains petals', () => {
 
   const giftHtml = appModule.renderScreen(gift);
   assert.equal((giftHtml.match(/opening-petal/g) || []).length, 8);
+});
+
+test('gift opening hands music to B before the reveal timeout', () => {
+  const appSource = readFileSync(
+    new URL('../src/app.js', import.meta.url),
+    'utf8',
+  );
+  const revealHandler = appSource.match(
+    /querySelector\('\[data-action="reveal"\]'\)[\s\S]*?window\.setTimeout/,
+  )?.[0];
+
+  assert.ok(revealHandler);
+  assert.match(
+    revealHandler,
+    /musicController\.beginReveal\(\)[\s\S]*window\.setTimeout/,
+  );
 });
 
 test('concert invitation can be accepted without leaving the result', () => {

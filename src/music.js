@@ -45,19 +45,27 @@ export function createMusicController(
     return started;
   }
 
-  return {
-    async sync(view) {
-      const nextTrack = view === 'revealed' ? 'b' : 'a';
-      if (nextTrack === activeTrack) {
-        return activePlayback ? true : playActive();
-      }
+  function switchTo(nextTrack) {
+    if (nextTrack === activeTrack) {
+      return activePlayback ? Promise.resolve(true) : playActive();
+    }
 
-      if (activeTrack) {
-        stopAndRewind(tracks[activeTrack]);
-      }
-      activeTrack = nextTrack;
-      activePlayback = false;
-      return playActive();
+    if (activeTrack) {
+      stopAndRewind(tracks[activeTrack]);
+    }
+    activeTrack = nextTrack;
+    activePlayback = false;
+    return playActive();
+  }
+
+  return {
+    sync(view) {
+      const nextTrack = view === 'revealed' ? 'b' : 'a';
+      return switchTo(nextTrack);
+    },
+
+    beginReveal() {
+      return switchTo('b');
     },
 
     retryActive() {

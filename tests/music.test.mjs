@@ -79,6 +79,28 @@ test('switches to B for revealed and rewinds the outgoing track', async () => {
   assert.equal(controller.getActiveTrack(), 'a');
 });
 
+test('starts B when gift opening begins and keeps it through reveal', async () => {
+  const harness = createAudioHarness();
+  const controller = createMusicController(harness.createAudio);
+  const trackA = harness.audioBySource.get(MUSIC_TRACKS.a);
+  const trackB = harness.audioBySource.get(MUSIC_TRACKS.b);
+
+  await controller.sync('gift');
+  trackA.currentTime = 9;
+  await controller.beginReveal();
+
+  assert.equal(trackA.pauseCalls, 1);
+  assert.equal(trackA.currentTime, 0);
+  assert.equal(trackB.playCalls, 1);
+  assert.equal(controller.getActiveTrack(), 'b');
+
+  await controller.sync('revealed');
+
+  assert.equal(trackB.pauseCalls, 0);
+  assert.equal(trackB.playCalls, 1);
+  assert.equal(controller.getActiveTrack(), 'b');
+});
+
 test('retries whichever track is active', async () => {
   const harness = createAudioHarness();
   const controller = createMusicController(harness.createAudio);

@@ -406,6 +406,7 @@ export function mountApp(
         event.currentTarget.disabled = true;
         event.currentTarget.classList.add('is-opening');
         event.currentTarget.closest('.gift-screen')?.classList.add('is-opening');
+        void musicController.beginReveal();
 
         window.setTimeout(() => {
           state = revealGift(state);
