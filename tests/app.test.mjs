@@ -4,8 +4,11 @@ import { readFileSync } from 'node:fs';
 
 import * as appModule from '../src/app.js';
 import {
+  MEMORY_SLIDES,
   QUESTIONS,
+  advanceMemory,
   createInitialState,
+  enterGift,
   getProgress,
   goBack,
   resetGift,
@@ -19,18 +22,33 @@ test('starts at home with no answers', () => {
     view: 'home',
     currentQuestion: 0,
     answers: [null, null, null],
+    memoryIndex: 0,
     responded: false,
   });
 });
 
-test('every option advances and the third answer unlocks the gift', () => {
+test('the final answer opens the memory reel before the gift', () => {
   let state = startQuiz(createInitialState());
   state = selectAnswer(state, 0);
   state = selectAnswer(state, 2);
   state = selectAnswer(state, 1);
 
-  assert.equal(state.view, 'gift');
+  assert.equal(state.view, 'memories');
+  assert.equal(state.memoryIndex, 0);
   assert.deepEqual(state.answers, [0, 2, 1]);
+  assert.equal(MEMORY_SLIDES.length, 3);
+});
+
+test('memory reel advances one photo at a time and only then enters gift', () => {
+  const first = { ...createInitialState(), view: 'memories', memoryIndex: 0 };
+  const second = advanceMemory(first);
+  const third = advanceMemory(second);
+
+  assert.equal(second.memoryIndex, 1);
+  assert.equal(third.memoryIndex, 2);
+  assert.equal(advanceMemory(third), third);
+  assert.equal(enterGift(third).view, 'gift');
+  assert.equal(enterGift(first), first);
 });
 
 test('progress follows the active question', () => {
@@ -57,6 +75,7 @@ test('gift can be revealed and reset without clearing answers', () => {
   state = selectAnswer(state, 0);
   state = selectAnswer(state, 0);
   state = selectAnswer(state, 0);
+  state = enterGift(advanceMemory(advanceMemory(state)));
 
   const revealed = revealGift(state);
 
@@ -167,6 +186,7 @@ test('gift opening contains petals', () => {
   gift = selectAnswer(gift, 0);
   gift = selectAnswer(gift, 0);
   gift = selectAnswer(gift, 0);
+  gift = enterGift(advanceMemory(advanceMemory(gift)));
 
   const giftHtml = appModule.renderScreen(gift);
   assert.equal((giftHtml.match(/opening-petal/g) || []).length, 8);
@@ -193,6 +213,7 @@ test('concert invitation can be accepted without leaving the result', () => {
   state = selectAnswer(state, 0);
   state = selectAnswer(state, 0);
   state = selectAnswer(state, 0);
+  state = enterGift(advanceMemory(advanceMemory(state)));
   state = revealGift(state);
 
   const responded = appModule.respondToInvitation(state);

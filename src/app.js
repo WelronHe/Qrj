@@ -31,6 +31,24 @@ export const GIFT_COPY = {
   replay: '再看一次',
 };
 
+export const MEMORY_SLIDES = [
+  {
+    src: '/public/memory-duck.jpg',
+    alt: '草地上的小鸭子',
+    focus: 'duck',
+  },
+  {
+    src: '/public/memory-huahua.jpg',
+    alt: '花花抱着两只小鸭子',
+    focus: 'huahua',
+  },
+  {
+    src: '/public/memory-us.jpg',
+    alt: '我们靠在一起的回忆',
+    focus: 'us',
+  },
+];
+
 export const ANSWER_ADVANCE_MS = 420;
 export const GIFT_REVEAL_MS = 1450;
 
@@ -39,6 +57,7 @@ export function createInitialState() {
     view: 'home',
     currentQuestion: 0,
     answers: Array(QUESTIONS.length).fill(null),
+    memoryIndex: 0,
     responded: false,
   };
 }
@@ -63,7 +82,8 @@ export function selectAnswer(state, optionIndex) {
     return {
       ...state,
       answers,
-      view: 'gift',
+      view: 'memories',
+      memoryIndex: 0,
     };
   }
 
@@ -76,6 +96,14 @@ export function selectAnswer(state, optionIndex) {
 
 export function goBack(state) {
   if (state.view === 'gift') {
+    return {
+      ...state,
+      view: 'memories',
+      memoryIndex: MEMORY_SLIDES.length - 1,
+    };
+  }
+
+  if (state.view === 'memories') {
     return {
       ...state,
       view: 'quiz',
@@ -97,6 +125,34 @@ export function goBack(state) {
   return {
     ...state,
     currentQuestion: state.currentQuestion - 1,
+  };
+}
+
+export function advanceMemory(state) {
+  if (
+    state.view !== 'memories' ||
+    state.memoryIndex >= MEMORY_SLIDES.length - 1
+  ) {
+    return state;
+  }
+
+  return {
+    ...state,
+    memoryIndex: state.memoryIndex + 1,
+  };
+}
+
+export function enterGift(state) {
+  if (
+    state.view !== 'memories' ||
+    state.memoryIndex !== MEMORY_SLIDES.length - 1
+  ) {
+    return state;
+  }
+
+  return {
+    ...state,
+    view: 'gift',
   };
 }
 
