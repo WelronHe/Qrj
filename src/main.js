@@ -1,3 +1,3 @@
-import { mountApp } from './app.js?v=editorial-white-20260819';
+import { mountApp } from './app.js?v=qixi-editorial-20260819-2';
 
 mountApp(document.querySelector('#app'));

@@ -113,7 +113,26 @@ test('quiz uses the approved white editorial treatment', () => {
   assert.match(styles, /\.quiz-footnote[\s\S]*text-align:\s*left/);
 });
 
-test('local preview entrypoints bust stale quiz assets', () => {
+test('home uses the approved white editorial treatment', () => {
+  const styles = readFileSync(
+    new URL('../src/styles.css', import.meta.url),
+    'utf8',
+  );
+
+  assert.match(styles, /--home-paper:\s*#fffefa/);
+  assert.match(styles, /--home-sage:\s*#6f9585/);
+  assert.match(
+    styles,
+    /\.home-screen[\s\S]*background:\s*var\(--home-paper\)/,
+  );
+  assert.match(styles, /\.home-screen \.ambient[\s\S]*display:\s*none/);
+  assert.match(
+    styles,
+    /\.primary-button[\s\S]*background:\s*var\(--home-sage-deep\)/,
+  );
+});
+
+test('local preview entrypoints bust stale editorial assets', () => {
   const indexHtml = readFileSync(
     new URL('../index.html', import.meta.url),
     'utf8',
@@ -125,10 +144,10 @@ test('local preview entrypoints bust stale quiz assets', () => {
 
   assert.match(
     indexHtml,
-    /\/src\/styles\.css\?v=editorial-white-20260819/,
+    /\/src\/styles\.css\?v=qixi-editorial-20260819-2/,
   );
-  assert.match(indexHtml, /\/src\/main\.js\?v=editorial-white-20260819/);
-  assert.match(mainScript, /\.\/app\.js\?v=editorial-white-20260819/);
+  assert.match(indexHtml, /\/src\/main\.js\?v=qixi-editorial-20260819-2/);
+  assert.match(mainScript, /\.\/app\.js\?v=qixi-editorial-20260819-2/);
 });
 
 test('ritual pacing uses deliberate answer and reveal timings', () => {

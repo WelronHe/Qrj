@@ -158,11 +158,23 @@ h2 {
 /* Home */
 
 .home-screen {
+  --home-paper: #fffefa;
+  --home-ink: #111714;
+  --home-muted: #74817b;
+  --home-sage: #6f9585;
+  --home-sage-deep: #284238;
   align-items: stretch;
-  background:
-    radial-gradient(circle at 86% 76%, rgba(87, 25, 44, 0.17), transparent 27%),
-    radial-gradient(circle at 16% 8%, rgba(224, 196, 139, 0.3), transparent 25%),
-    linear-gradient(145deg, #fbf7f1 0%, var(--paper) 57%, #ecdfd5 100%);
+  color: var(--home-ink);
+  background: var(--home-paper);
+}
+
+.home-screen::before,
+.home-screen .ambient {
+  display: none;
+}
+
+.home-screen button:focus-visible {
+  outline-color: rgba(111, 149, 133, 0.52);
 }
 
 .home-screen::after {
@@ -172,7 +184,12 @@ h2 {
   left: 51px;
   z-index: -1;
   width: 1px;
-  background: linear-gradient(transparent, rgba(114, 31, 58, 0.13) 16%, rgba(114, 31, 58, 0.13) 84%, transparent);
+  background: linear-gradient(
+    transparent,
+    rgba(111, 149, 133, 0.14) 16%,
+    rgba(111, 149, 133, 0.14) 84%,
+    transparent
+  );
   content: "";
 }
 
@@ -208,7 +225,7 @@ h2 {
   display: flex;
   align-items: center;
   gap: 10px;
-  color: rgba(58, 14, 32, 0.56);
+  color: var(--home-sage);
   font-family: Georgia, serif;
   font-size: 9px;
   font-weight: 700;
@@ -218,7 +235,7 @@ h2 {
 .home-date i {
   width: 34px;
   height: 1px;
-  background: rgba(58, 14, 32, 0.25);
+  background: rgba(111, 149, 133, 0.48);
 }
 
 .hero-card {
@@ -238,12 +255,18 @@ h2 {
 
 .home-copy .eyebrow {
   margin-bottom: 18px;
+  color: var(--home-sage);
+}
+
+.home-copy h1 {
+  color: var(--home-ink);
+  font-weight: 600;
 }
 
 .subtitle {
   max-width: 292px;
   margin: 23px 0 0;
-  color: var(--muted);
+  color: var(--home-muted);
   font-family: "Songti SC", STSong, serif;
   font-size: 16px;
   line-height: 1.8;
@@ -266,12 +289,16 @@ h2 {
   left: 7px;
   width: 176px;
   height: 176px;
-  border: 1px solid rgba(201, 163, 93, 0.23);
+  border: 1px solid rgba(111, 149, 133, 0.16);
   border-radius: 50%;
-  background: radial-gradient(circle, rgba(240, 215, 148, 0.3), transparent 66%);
+  background: radial-gradient(
+    circle,
+    rgba(214, 229, 222, 0.46),
+    transparent 68%
+  );
   box-shadow:
-    0 0 0 13px rgba(255, 255, 255, 0.1),
-    0 24px 60px rgba(58, 14, 32, 0.1);
+    0 0 0 13px rgba(255, 255, 255, 0.22),
+    0 24px 60px rgba(45, 70, 59, 0.08);
 }
 
 .black-rose {
@@ -281,7 +308,7 @@ h2 {
   width: 150px;
   height: 270px;
   transform: rotate(8deg);
-  filter: drop-shadow(0 22px 18px rgba(24, 8, 14, 0.2));
+  filter: drop-shadow(0 22px 18px rgba(14, 18, 16, 0.2));
 }
 
 .rose-bloom,
@@ -400,9 +427,10 @@ h2 {
   right: 12px;
   bottom: 8px;
   padding: 5px 10px;
-  border: 1px solid rgba(58, 14, 32, 0.18);
+  border: 1px solid #dfe7e3;
   border-radius: 999px;
-  color: rgba(58, 14, 32, 0.58);
+  background: #fff;
+  color: #60746b;
   font-family: Georgia, serif;
   font-size: 9px;
   letter-spacing: 0.24em;
@@ -418,14 +446,14 @@ h2 {
   margin-top: auto;
   padding: 0 8px 0 24px;
   border: 0;
-  background: var(--wine-deep);
-  box-shadow: 0 18px 36px rgba(58, 14, 32, 0.22);
-  color: #fff9f2;
+  background: var(--home-sage-deep);
+  box-shadow: 0 18px 36px rgba(40, 66, 56, 0.2);
+  color: #fff;
 }
 
 .primary-button:hover {
   transform: translateY(-2px);
-  box-shadow: 0 22px 42px rgba(58, 14, 32, 0.27);
+  box-shadow: 0 22px 42px rgba(40, 66, 56, 0.26);
 }
 
 .button-arrow {
@@ -435,7 +463,7 @@ h2 {
   place-items: center;
   border-radius: 50%;
   background: rgba(255, 255, 255, 0.12);
-  color: var(--gold-light);
+  color: #dcebe4;
   font-family: Georgia, serif;
   font-size: 18px;
 }
