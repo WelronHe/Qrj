@@ -50,6 +50,7 @@ export const MEMORY_SLIDES = [
 ];
 
 export const ANSWER_ADVANCE_MS = 420;
+export const MEMORY_SLIDE_MS = 1800;
 export const GIFT_REVEAL_MS = 1450;
 
 export function createInitialState() {
@@ -278,6 +279,96 @@ function renderQuiz(state) {
   `;
 }
 
+function renderMemories(state) {
+  const activeIndex = Math.min(
+    Math.max(state.memoryIndex, 0),
+    MEMORY_SLIDES.length - 1,
+  );
+  const activeSlide = MEMORY_SLIDES[activeIndex];
+  const isFinal = activeIndex === MEMORY_SLIDES.length - 1;
+  const frames = MEMORY_SLIDES.map((slide, index) => {
+    const position =
+      index === activeIndex
+        ? 'is-active'
+        : index < activeIndex
+          ? 'is-past'
+          : 'is-upcoming';
+
+    return `
+      <span class="memory-photo memory-photo-${slide.focus} ${position}" data-memory-frame="${index}">
+        <img src="${slide.src}" alt="${slide.alt}" data-memory-image />
+        <span class="memory-photo-shine" aria-hidden="true"></span>
+      </span>
+    `;
+  }).join('');
+  const stage = isFinal
+    ? `<div class="memory-stage is-final">${frames}</div>`
+    : `
+      <button
+        class="memory-stage"
+        data-action="memory-next"
+        type="button"
+        aria-label="查看下一张回忆"
+      >
+        ${frames}
+      </button>
+    `;
+  const progress = MEMORY_SLIDES.map(
+    (_, index) => `
+      <span class="${index === activeIndex ? 'is-current' : ''} ${index < activeIndex ? 'is-seen' : ''}"></span>
+    `,
+  ).join('');
+
+  return `
+    <main class="screen memory-screen memory-step-${activeIndex + 1}">
+      <img
+        class="memory-backdrop"
+        src="${activeSlide.src}"
+        alt=""
+        aria-hidden="true"
+        data-memory-image
+      />
+      <span class="memory-veil" aria-hidden="true"></span>
+      <button class="icon-button memory-back" data-action="back" type="button" aria-label="返回第三题">←</button>
+
+      <section class="memory-content">
+        <header class="memory-header">
+          <p>OUR LITTLE MOMENTS</p>
+          <span>0${activeIndex + 1} / 0${MEMORY_SLIDES.length}</span>
+        </header>
+
+        ${stage}
+
+        <div class="memory-ending ${isFinal ? 'is-visible' : ''}" aria-live="polite">
+          ${
+            isFinal
+              ? `
+                <p class="memory-line memory-line-one">和你在一起</p>
+                <p class="memory-line memory-line-two">再普通的日子</p>
+                <p class="memory-line memory-line-three">也万幸有光</p>
+              `
+              : '<p class="memory-hint">轻轻点一下，继续往前</p>'
+          }
+        </div>
+
+        <footer class="memory-footer">
+          <div class="memory-progress" aria-label="回忆进度">${progress}</div>
+          ${
+            isFinal
+              ? `
+                <button class="memory-continue" data-action="memory-continue" type="button">
+                  <span>继续拆礼物</span>
+                  <span aria-hidden="true">↗</span>
+                </button>
+              `
+              : ''
+          }
+        </footer>
+      </section>
+    </main>
+  `;
+}
+
 function renderGift() {
   return `
     <main class="screen gift-screen">
@@ -381,6 +472,9 @@ export function renderScreen(state) {
   if (state.view === 'quiz') {
     return renderQuiz(state);
   }
+  if (state.view === 'memories') {
+    return renderMemories(state);
+  }
   if (state.view === 'gift') {
     return renderGift();
   }
@@ -403,11 +497,22 @@ export function mountApp(
 
   let state = createInitialState();
   let locked = false;
+  let memoryTimer = null;
+
+  const clearMemoryTimer = () => {
+    if (memoryTimer === null) {
+      return;
+    }
+
+    window.clearTimeout(memoryTimer);
+    memoryTimer = null;
+  };
 
   const retryMusic = () => musicController.retryActive();
   interactionTarget.addEventListener('pointerdown', retryMusic, { once: true });
 
   const render = () => {
+    clearMemoryTimer();
     root.innerHTML = renderScreen(state);
     const renderedView = state.view;
     const playback = musicController.sync(renderedView);
@@ -450,6 +555,38 @@ export function mountApp(
         }, ANSWER_ADVANCE_MS);
       });
     });
+
+    root.querySelectorAll('[data-memory-image]').forEach((image) => {
+      image.addEventListener('error', () => {
+        image.closest('.memory-screen, .memory-photo')?.classList.add('is-image-missing');
+      });
+    });
+
+    root
+      .querySelector('[data-action="memory-next"]')
+      ?.addEventListener('click', () => {
+        clearMemoryTimer();
+        state = advanceMemory(state);
+        render();
+      });
+
+    root
+      .querySelector('[data-action="memory-continue"]')
+      ?.addEventListener('click', () => {
+        state = enterGift(state);
+        render();
+      });
+
+    if (
+      state.view === 'memories' &&
+      state.memoryIndex < MEMORY_SLIDES.length - 1
+    ) {
+      memoryTimer = window.setTimeout(() => {
+        memoryTimer = null;
+        state = advanceMemory(state);
+        render();
+      }, MEMORY_SLIDE_MS);
+    }
 
     root
       .querySelector('[data-action="reveal"]')

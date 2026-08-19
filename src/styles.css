@@ -653,6 +653,374 @@ h2 {
   animation-delay: 1.1s;
 }
 
+/* Memory reel */
+
+.memory-screen {
+  --memory-cream: #fffaf0;
+  --memory-gold: #f0d794;
+  --memory-sage: #9bb7a9;
+  align-items: stretch;
+  color: var(--memory-cream);
+  background:
+    radial-gradient(circle at 50% 42%, rgba(137, 166, 143, 0.2), transparent 36%),
+    linear-gradient(155deg, #18251f 0%, #0a100e 58%, #040706 100%);
+}
+
+.memory-screen::before {
+  z-index: 0;
+  background-image:
+    linear-gradient(rgba(255, 255, 255, 0.025) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.018) 1px, transparent 1px);
+  background-size: 26px 26px;
+  mask-image: linear-gradient(to bottom, #000, transparent 88%);
+}
+
+.memory-backdrop {
+  position: absolute;
+  z-index: -3;
+  inset: -48px;
+  width: calc(100% + 96px);
+  height: calc(100% + 96px);
+  transform: scale(1.12);
+  object-fit: cover;
+  filter: blur(34px) saturate(0.8) brightness(0.42);
+  opacity: 0.62;
+  animation: memory-backdrop-in 1.1s ease both;
+}
+
+.memory-screen.is-image-missing .memory-backdrop {
+  opacity: 0;
+}
+
+.memory-veil {
+  position: absolute;
+  z-index: -2;
+  inset: 0;
+  background:
+    linear-gradient(180deg, rgba(3, 8, 6, 0.48), transparent 24%),
+    linear-gradient(0deg, rgba(3, 7, 5, 0.9), transparent 48%),
+    radial-gradient(circle at center, transparent 32%, rgba(2, 5, 4, 0.35));
+  pointer-events: none;
+}
+
+.memory-back {
+  position: absolute;
+  z-index: 20;
+  top: max(24px, env(safe-area-inset-top));
+  left: 22px;
+  border-color: rgba(255, 255, 255, 0.18);
+  background: rgba(8, 16, 12, 0.26);
+  color: var(--memory-cream);
+  backdrop-filter: blur(12px);
+}
+
+.memory-back:hover {
+  background: rgba(255, 255, 255, 0.12);
+}
+
+.memory-content {
+  position: relative;
+  z-index: 2;
+  width: min(100%, 440px);
+  min-height: calc(100vh - 52px);
+  min-height: calc(100dvh - 52px - env(safe-area-inset-top) - env(safe-area-inset-bottom));
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  margin: auto;
+}
+
+.memory-header {
+  min-height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 14px;
+  color: rgba(255, 250, 240, 0.7);
+  font-size: 9px;
+  font-weight: 800;
+  letter-spacing: 0.16em;
+}
+
+.memory-header p {
+  margin: 0;
+}
+
+.memory-header p::after {
+  width: 36px;
+  height: 1px;
+  display: inline-block;
+  margin: 0 0 3px 12px;
+  background: rgba(240, 215, 148, 0.48);
+  content: "";
+}
+
+.memory-header span {
+  color: var(--memory-gold);
+  font-family: Georgia, serif;
+  letter-spacing: 0.08em;
+}
+
+.memory-stage {
+  position: relative;
+  width: 100%;
+  height: clamp(310px, 50dvh, 500px);
+  flex: 0 0 auto;
+  display: block;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: inherit;
+  cursor: pointer;
+}
+
+.memory-stage.is-final {
+  cursor: default;
+}
+
+.memory-stage:focus-visible {
+  outline: 2px solid var(--memory-gold);
+  outline-offset: 7px;
+  border-radius: 28px;
+}
+
+.memory-photo {
+  position: absolute;
+  top: 18px;
+  right: 10px;
+  bottom: 18px;
+  left: 10px;
+  overflow: hidden;
+  transform-origin: 50% 82%;
+  border: 6px solid rgba(255, 252, 246, 0.94);
+  border-radius: 25px;
+  background:
+    radial-gradient(circle at 50% 38%, rgba(240, 215, 148, 0.18), transparent 32%),
+    #1a2420;
+  box-shadow:
+    0 28px 70px rgba(0, 0, 0, 0.38),
+    0 2px 0 rgba(255, 255, 255, 0.16) inset;
+  opacity: 0;
+  transition:
+    transform 0.65s cubic-bezier(0.18, 0.82, 0.2, 1),
+    opacity 0.55s ease,
+    filter 0.55s ease;
+}
+
+.memory-photo img {
+  width: 100%;
+  height: 100%;
+  display: block;
+  object-fit: cover;
+  transition: opacity 0.35s ease;
+}
+
+.memory-photo-duck img {
+  object-position: 58% 62%;
+}
+
+.memory-photo-huahua img {
+  object-fit: contain;
+  object-position: center;
+  background:
+    radial-gradient(circle at center, rgba(112, 145, 127, 0.22), transparent 55%),
+    #101814;
+}
+
+.memory-photo-us img {
+  object-position: 50% 50%;
+}
+
+.memory-photo.is-active {
+  z-index: 5;
+  transform: translateY(0) rotate(-1deg) scale(1);
+  opacity: 1;
+  animation: memory-card-in 0.72s cubic-bezier(0.18, 0.82, 0.2, 1) both;
+}
+
+.memory-step-2 .memory-photo.is-active {
+  transform: translateY(0) rotate(1.5deg) scale(1);
+}
+
+.memory-photo-huahua.is-active {
+  right: auto;
+  left: 50%;
+  width: min(70%, 280px);
+}
+
+.memory-step-2 .memory-photo-huahua.is-active {
+  transform: translate(-50%, 0) rotate(1.5deg) scale(1);
+}
+
+.memory-step-3 .memory-photo.is-active {
+  transform: translateY(-2px) rotate(0) scale(1.015);
+}
+
+.memory-photo.is-past {
+  z-index: 3;
+  transform: translate(-18px, -8px) rotate(-7deg) scale(0.93);
+  filter: saturate(0.68) brightness(0.68);
+  opacity: 0.36;
+}
+
+.memory-photo.is-upcoming {
+  z-index: 2;
+  transform: translate(19px, 7px) rotate(6deg) scale(0.92);
+  filter: saturate(0.52) brightness(0.58);
+  opacity: 0.2;
+}
+
+.memory-photo.is-upcoming + .memory-photo.is-upcoming {
+  transform: translate(9px, -3px) rotate(3deg) scale(0.9);
+  opacity: 0.13;
+}
+
+.memory-photo.is-active img {
+  animation: memory-image-breathe 4.8s ease-in-out both;
+}
+
+.memory-photo-shine {
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(115deg, rgba(255, 255, 255, 0.13), transparent 25%, transparent 78%, rgba(240, 215, 148, 0.08)),
+    linear-gradient(0deg, rgba(3, 7, 5, 0.56), transparent 42%);
+  pointer-events: none;
+}
+
+.memory-photo.is-image-missing img {
+  opacity: 0;
+}
+
+.memory-photo.is-image-missing::after {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  padding: 30px;
+  color: rgba(255, 250, 240, 0.7);
+  content: "这一刻，仍然在心里";
+  font-family: "Songti SC", STSong, serif;
+  font-size: 18px;
+}
+
+.memory-ending {
+  position: relative;
+  z-index: 8;
+  min-height: 106px;
+  margin-top: -130px;
+  padding: 16px 28px 12px;
+  pointer-events: none;
+}
+
+.memory-ending p {
+  margin: 0;
+  color: var(--memory-cream);
+  font-family: "Songti SC", STSong, Georgia, serif;
+  text-shadow: 0 3px 24px rgba(0, 0, 0, 0.86);
+}
+
+.memory-hint {
+  width: max-content;
+  margin-top: 52px !important;
+  padding: 7px 11px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 999px;
+  background: rgba(4, 9, 7, 0.38);
+  backdrop-filter: blur(8px);
+  font-size: 11px;
+  letter-spacing: 0.12em;
+  opacity: 0.66;
+  animation: hint-pulse 2s ease-in-out infinite;
+}
+
+.memory-line {
+  font-size: clamp(21px, 6vw, 28px);
+  font-weight: 600;
+  line-height: 1.32;
+  opacity: 0;
+  animation: memory-line-in 0.68s cubic-bezier(0.18, 0.82, 0.2, 1) forwards;
+}
+
+.memory-line-two {
+  animation-delay: 0.35s;
+}
+
+.memory-ending .memory-line-three {
+  color: var(--memory-gold);
+  animation-delay: 0.7s;
+}
+
+.memory-footer {
+  position: relative;
+  z-index: 10;
+  min-height: 104px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 17px;
+  padding: 0 10px;
+}
+
+.memory-progress {
+  display: flex;
+  justify-content: center;
+  gap: 7px;
+}
+
+.memory-progress span {
+  width: 5px;
+  height: 5px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.26);
+  transition:
+    width 0.35s ease,
+    background 0.35s ease;
+}
+
+.memory-progress span.is-seen {
+  background: rgba(240, 215, 148, 0.54);
+}
+
+.memory-progress span.is-current {
+  width: 28px;
+  background: var(--memory-gold);
+}
+
+.memory-continue {
+  width: 100%;
+  min-height: 56px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 9px 0 24px;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  border-radius: 999px;
+  background: rgba(255, 250, 240, 0.96);
+  box-shadow:
+    0 19px 45px rgba(0, 0, 0, 0.32),
+    0 0 34px rgba(240, 215, 148, 0.09);
+  color: #152019;
+  font-weight: 760;
+  cursor: pointer;
+  animation: memory-button-in 0.65s 0.96s ease both;
+}
+
+.memory-continue span:last-child {
+  width: 40px;
+  height: 40px;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  background: #233a30;
+  color: #fff;
+  font-family: Georgia, serif;
+}
+
+.memory-continue:active {
+  transform: scale(0.985);
+}
+
 /* Gift */
 
 .gift-screen {
@@ -1301,6 +1669,31 @@ h2 {
 
 /* Motion */
 
+@keyframes memory-backdrop-in {
+  from { transform: scale(1.2); opacity: 0.25; }
+  to { transform: scale(1.12); opacity: 0.62; }
+}
+
+@keyframes memory-card-in {
+  from { transform: translateY(26px) rotate(4deg) scale(0.94); opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes memory-image-breathe {
+  from { transform: scale(1.035); }
+  to { transform: scale(1.075); }
+}
+
+@keyframes memory-line-in {
+  from { transform: translateY(12px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+
+@keyframes memory-button-in {
+  from { transform: translateY(12px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+
 @keyframes copy-arrive {
   from { transform: translateY(18px); opacity: 0; }
   to { transform: translateY(0); opacity: 1; }
@@ -1434,7 +1827,8 @@ h2 {
   }
 
   .hero-card,
-  .quiz-card {
+  .quiz-card,
+  .memory-content {
     width: min(100%, 520px);
   }
 
@@ -1470,6 +1864,15 @@ h2 {
 
   .option {
     min-height: 66px;
+  }
+
+  .memory-photo {
+    right: 4px;
+    left: 4px;
+  }
+
+  .memory-ending {
+    padding-inline: 22px;
   }
 
   .concert-ticket {
@@ -1538,6 +1941,34 @@ h2 {
 
   .gift-content h2 {
     font-size: 32px;
+  }
+
+  .memory-header {
+    min-height: 37px;
+  }
+
+  .memory-stage {
+    height: min(50dvh, 360px);
+  }
+
+  .memory-ending {
+    min-height: 92px;
+    margin-top: -113px;
+    padding-top: 10px;
+  }
+
+  .memory-hint {
+    margin-top: 43px !important;
+  }
+
+  .memory-line {
+    font-size: 21px;
+    line-height: 1.24;
+  }
+
+  .memory-footer {
+    min-height: 92px;
+    gap: 12px;
   }
 
   .gift-box {

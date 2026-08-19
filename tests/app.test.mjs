@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { readFileSync } from 'node:fs';
+import { existsSync, readFileSync, statSync } from 'node:fs';
 
 import * as appModule from '../src/app.js';
 import {
@@ -49,6 +49,51 @@ test('memory reel advances one photo at a time and only then enters gift', () =>
   assert.equal(advanceMemory(third), third);
   assert.equal(enterGift(third).view, 'gift');
   assert.equal(enterGift(first), first);
+});
+
+test('memory reel renders the approved sequence and final copy', () => {
+  const first = appModule.renderScreen({
+    ...createInitialState(),
+    view: 'memories',
+    memoryIndex: 0,
+  });
+  const final = appModule.renderScreen({
+    ...createInitialState(),
+    view: 'memories',
+    memoryIndex: 2,
+  });
+
+  assert.match(first, /memory-duck\.jpg/);
+  assert.doesNotMatch(first, /继续拆礼物/);
+  assert.match(final, /memory-us\.jpg/);
+  assert.match(final, /和你在一起/);
+  assert.match(final, /再普通的日子/);
+  assert.match(final, /也万幸有光/);
+  assert.match(final, /继续拆礼物/);
+});
+
+test('memory reel centers the cinematic stage and highlights the final line', () => {
+  const styles = readFileSync(
+    new URL('../src/styles.css', import.meta.url),
+    'utf8',
+  );
+
+  assert.match(
+    styles,
+    /\.memory-content\s*\{[^}]*justify-content:\s*center/,
+  );
+  assert.match(
+    styles,
+    /\.memory-ending \.memory-line-three\s*\{[^}]*color:\s*var\(--memory-gold\)/,
+  );
+  assert.match(
+    styles,
+    /\.memory-photo-huahua img\s*\{[^}]*object-fit:\s*contain/,
+  );
+  assert.match(
+    styles,
+    /\.memory-photo-huahua\.is-active\s*\{[^}]*width:\s*min\(70%, 280px\)/,
+  );
 });
 
 test('progress follows the active question', () => {
@@ -163,10 +208,22 @@ test('local preview entrypoints bust stale editorial assets', () => {
 
   assert.match(
     indexHtml,
-    /\/src\/styles\.css\?v=qixi-editorial-20260819-3/,
+    /\/src\/styles\.css\?v=qixi-memory-20260819-1/,
   );
-  assert.match(indexHtml, /\/src\/main\.js\?v=qixi-editorial-20260819-3/);
-  assert.match(mainScript, /\.\/app\.js\?v=qixi-editorial-20260819-3/);
+  assert.match(indexHtml, /\/src\/main\.js\?v=qixi-memory-20260819-1/);
+  assert.match(mainScript, /\.\/app\.js\?v=qixi-memory-20260819-1/);
+});
+
+test('optimized local memory photos are available for the reel', () => {
+  for (const filename of [
+    'memory-duck.jpg',
+    'memory-huahua.jpg',
+    'memory-us.jpg',
+  ]) {
+    const photo = new URL(`../public/${filename}`, import.meta.url);
+    assert.equal(existsSync(photo), true);
+    assert.ok(statSync(photo).size > 0);
+  }
 });
 
 test('ritual pacing uses deliberate answer and reveal timings', () => {
