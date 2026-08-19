@@ -113,6 +113,24 @@ test('quiz uses the approved white editorial treatment', () => {
   assert.match(styles, /\.quiz-footnote[\s\S]*text-align:\s*left/);
 });
 
+test('local preview entrypoints bust stale quiz assets', () => {
+  const indexHtml = readFileSync(
+    new URL('../index.html', import.meta.url),
+    'utf8',
+  );
+  const mainScript = readFileSync(
+    new URL('../src/main.js', import.meta.url),
+    'utf8',
+  );
+
+  assert.match(
+    indexHtml,
+    /\/src\/styles\.css\?v=editorial-white-20260819/,
+  );
+  assert.match(indexHtml, /\/src\/main\.js\?v=editorial-white-20260819/);
+  assert.match(mainScript, /\.\/app\.js\?v=editorial-white-20260819/);
+});
+
 test('ritual pacing uses deliberate answer and reveal timings', () => {
   assert.equal(appModule.ANSWER_ADVANCE_MS, 420);
   assert.equal(appModule.GIFT_REVEAL_MS, 1450);
