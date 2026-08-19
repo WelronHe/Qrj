@@ -202,7 +202,6 @@ function renderQuiz(state) {
       <section class="quiz-card">
         <header class="quiz-header">
           <button class="icon-button" data-action="back" type="button" aria-label="返回上一页">←</button>
-          <p>OUR LITTLE QUIZ</p>
           <span>${String(progress.current).padStart(2, '0')} / ${String(progress.total).padStart(2, '0')}</span>
         </header>
 

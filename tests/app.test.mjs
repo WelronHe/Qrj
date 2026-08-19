@@ -1,5 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
+import { readFileSync } from 'node:fs';
 
 import * as appModule from '../src/app.js';
 import {
@@ -93,6 +94,23 @@ test('the concert question uses the concise approved wording', () => {
     QUESTIONS[1].title,
     '《乐队的夏天》中，哪个组合你最想去一次？',
   );
+});
+
+test('quiz uses the approved white editorial treatment', () => {
+  const quizHtml = appModule.renderScreen(startQuiz(createInitialState()));
+  const styles = readFileSync(
+    new URL('../src/styles.css', import.meta.url),
+    'utf8',
+  );
+
+  assert.doesNotMatch(quizHtml, /OUR LITTLE QUIZ/);
+  assert.match(quizHtml, /<header class="quiz-header">/);
+  assert.match(styles, /--quiz-sage:\s*#6f9585/);
+  assert.match(
+    styles,
+    /\.option\.is-selected[\s\S]*box-shadow:\s*inset 4px 0 var\(--quiz-sage\)/,
+  );
+  assert.match(styles, /\.quiz-footnote[\s\S]*text-align:\s*left/);
 });
 
 test('ritual pacing uses deliberate answer and reveal timings', () => {
